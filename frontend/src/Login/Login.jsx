@@ -52,7 +52,7 @@ export default function Login() {
         </div>
         <button type="submit" className="btn">Login</button>
         <div className="auth-links">
-          <Link to="/forgot-password">Forgot Password?</Link><br /><br />
+          <Link to="/forgot">Forgot Password?</Link><br /><br />
           <Link to="/">Don't have account ? Register</Link>
         </div>
       </form>
