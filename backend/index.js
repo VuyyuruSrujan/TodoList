@@ -15,13 +15,15 @@ app.post('/register',(req , res)=>{
     if(mail){
         RegisterModel.findOne({mail})
         .then(result=>{
-            if(result.mail == mail){
-                res.json("user already exists");
+            if(result){
+                if(result.mail == mail){
+                    res.json("user already exists");
+                }
             }else{
                 RegisterModel.create({name , mail , password})
                 .then(result =>{
                     console.log("user registered successfully:",result);
-                    res.json(result);
+                    res.json("Registered successfully");
                 })
                 .catch(err =>{
                     console.log("error",err);

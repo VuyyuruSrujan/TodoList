@@ -18,6 +18,19 @@ export default function Register() {
     console.log("mail",mail);
     console.log("password",password);
     console.log("confirm",confirm_pass);
+
+    axios.post('http://localhost:5001/register',{name , mail , password})
+    .then(answer =>{
+      console.log("answer",answer);
+      if(answer.data = "Registered successfully"){
+        toast.success(answer.data);
+        navigate('/login');
+      }
+    })
+    .catch(error =>{
+      console.log("error:",error);
+      toast.warning(error);
+    })
   }
 
   return (
