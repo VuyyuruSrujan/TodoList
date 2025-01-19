@@ -15,9 +15,13 @@ export default function Login() {
   console.log("password",password);
   axios.post("http://localhost:5001/login" , {mail , password})
   .then(result =>{
-    console.log("logged in",result);
-   toast.success(result.data);
-   navigate('/todos');
+    console.log("result:",result);
+    if(result.data.message){
+    toast.success(result.data.message);
+    // navigate('/todos')
+    }else{
+        toast.warning(result.data);
+    }
   })
   .catch(error =>{
     console.log("error",error);
@@ -48,8 +52,8 @@ export default function Login() {
         </div>
         <button type="submit" className="btn">Login</button>
         <div className="auth-links">
-          <Link to="/forgot-password">Forgot Password?</Link>
-          <Link to="/register">Register</Link>
+          <Link to="/forgot-password">Forgot Password?</Link><br /><br />
+          <Link to="/">Don't have account ? Register</Link>
         </div>
       </form>
     </div>
