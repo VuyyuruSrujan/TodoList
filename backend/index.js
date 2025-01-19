@@ -63,6 +63,8 @@ app.post('/check_mail',(req , res) =>{
     })
 })
 
+
+
 const SECRET_KEY = "Vuyyu*@03";
 
 // Nodemailer transporter setup
@@ -98,6 +100,21 @@ app.post('/sendOTP', (req, res) => {
             res.status(200).json({ message: 'OTP sent successfully', otp });
         }
     });
+});
+
+app.post('/reset_register',(req , res)=>{
+    const {mail , password} = req.body;
+    RegisterModel.updateOne({mail },{$set: {password}})
+    .then(result =>{
+        if(result.modifiedCount>0){
+        console.log("User updated:",result);
+        res.json({message:"user details updated successfully"});
+        }else{
+            console.log("No matching user found");
+            res.json({ message: 'User not found' });
+        }
+    })
+    .catch(err=> res.json(err));
 });
 
 app.listen(5001, () => {

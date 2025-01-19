@@ -22,6 +22,7 @@ function ForgotPassword() {
                 if(result.status == 200){
                     console.log("sent succesfully",result.data.otp);
                     localStorage.setItem("local_otp",result.data.otp);
+                    localStorage.setItem("lmail",mail);
                     toast.success('OTP sent to your email!');
                     setShowOTP(true);
                 }else{
@@ -44,8 +45,9 @@ function ForgotPassword() {
     var local_otp = localStorage.getItem("local_otp");
     if(verifyotp){
         if(verifyotp == local_otp){
+            localStorage.removeItem("local_otp");
             toast.success("successfuly verified");
-            navigate('/login')
+            navigate('/ResetPassword',{replace:true})
         }
     }else{
         toast.warning("enter otp")
