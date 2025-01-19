@@ -2,21 +2,54 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { FaEnvelope, FaKey } from 'react-icons/fa';
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 function ForgotPassword() {
-  const [email, setEmail] = useState('');
+    const navigate = useNavigate();
+  const [mail, setEmail] = useState('');
   const [showOTP, setShowOTP] = useState(false);
-  const [otp, setOTP] = useState('');
+//   const [otp, setOTP] = useState('');
 
-  const handleSendOTP = (e) => {
-    e.preventDefault();
-    toast.success('OTP sent to your email!');
-    setShowOTP(true);
+  function handleSendOTP(){
+    event.preventDefault();
+    axios.post('http://localhost:5001/check_mail',{mail})
+    .then(result =>{
+        console.log("result",result);
+        if(result.data.message){
+            axios.post('http://localhost:5001/sendOTP',{mail})
+            .then(result =>{
+                if(result.status == 200){
+                    console.log("sent succesfully",result.data.otp);
+                    localStorage.setItem("local_otp",result.data.otp);
+                    toast.success('OTP sent to your email!');
+                    setShowOTP(true);
+                }else{
+                    console.log(result.data.message);
+                }
+            })
+            .catch(error=>{
+                console.log(error);
+            })
+            
+        }else{
+            toast.warning("you are not registered");
+        }
+    })
   };
 
-  const handleVerifyOTP = (e) => {
-    e.preventDefault();
-    toast.success('Password reset successful!');
+  function handleVerifyOTP(){
+    event.preventDefault();
+    var verifyotp = document.getElementById('verifyotp').value;
+    var local_otp = localStorage.getItem("local_otp");
+    if(verifyotp){
+        if(verifyotp == local_otp){
+            toast.success("successfuly verified");
+            navigate('/login')
+        }
+    }else{
+        toast.warning("enter otp")
+    }
   };
 
   return (
@@ -27,7 +60,7 @@ function ForgotPassword() {
           <label><FaEnvelope /> Email</label>
           <input
             type="email"
-            value={email}
+            value={mail}
             onChange={(e) => setEmail(e.target.value)}
             required
           />
@@ -39,9 +72,8 @@ function ForgotPassword() {
             <div className="form-group">
               <label><FaKey /> Enter OTP</label>
               <input
+              id='verifyotp'
                 type="text"
-                value={otp}
-                onChange={(e) => setOTP(e.target.value)}
                 required
               />
             </div>
@@ -49,7 +81,7 @@ function ForgotPassword() {
           </>
         )}
         <div className="auth-links">
-          <Link to="/">Back to Login</Link>
+          <Link to="/login">Back to Login</Link>
         </div>
       </form>
     </div>
