@@ -34,6 +34,22 @@ app.post('/register',(req , res)=>{
     }
 });
 
+app.post('/login' , (req, res)=>{
+    const {mail , password} = req.body;
+    RegisterModel.findOne({mail})
+    .then(result =>{
+        if(result){
+            if(result.password == password){
+                res.json({message:"logged in succeffully"});
+            }else{
+                res.json("incorrect password");
+            }
+        }else{
+            res.json("you are not registered");
+        };
+    })
+});
+
 app.listen(5001, () => {
     console.log("Server is running on port 5001");
 });

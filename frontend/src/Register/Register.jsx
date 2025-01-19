@@ -19,18 +19,26 @@ export default function Register() {
     console.log("password",password);
     console.log("confirm",confirm_pass);
 
-    axios.post('http://localhost:5001/register',{name , mail , password})
-    .then(answer =>{
-      console.log("answer",answer);
-      if(answer.data = "Registered successfully"){
-        toast.success(answer.data);
-        navigate('/login');
+    if(password == confirm_pass){
+      if(password.length >=8){
+        axios.post('http://localhost:5001/register',{name , mail , password})
+        .then(answer =>{
+          console.log("answer",answer);
+          if(answer.data = "Registered successfully"){
+            toast.success(answer.data);
+            navigate('/login');
+          }
+        })
+        .catch(error =>{
+          console.log("error:",error);
+          toast.warning(error);
+        })
+      }else{
+        toast.warning("passowrd length must have 8 characters")
       }
-    })
-    .catch(error =>{
-      console.log("error:",error);
-      toast.warning(error);
-    })
+    }else{
+      toast.warning("password and confirm password must be same");
+    }
   }
 
   return (
