@@ -3,6 +3,7 @@ import { toast } from 'react-toastify';
 import { FaPlus, FaEdit, FaTrash, FaCheck, FaTimes, FaSignOutAlt } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 import './TodoList.css';
+import axios from 'axios';
 
 export default function TodoList() {
   const [todos, setTodos] = useState([]);
@@ -11,6 +12,7 @@ export default function TodoList() {
   const [dueDate, setDueDate] = useState('');
   const [editingId, setEditingId] = useState(null);
   const navigate = useNavigate();
+  const [myTasks , setmyTasks] = useState([]);
 
 //   useEffect(() =>{
 //     var check = localStorage.getItem("authToken");
@@ -21,6 +23,25 @@ export default function TodoList() {
 //     };
 //   });
 
+    useEffect(() =>{
+        async function fetchtasks(){
+        try {
+            var mail = localStorage.getItem("mail");
+            var tasks = await fetch(`http://localhost:5001/my_tasks/${mail}`);
+            // console.log("tasks:",tasks);
+            if(tasks.status == 200){
+                const data = await tasks.json()
+                console.log("tasks:",data.data)
+                setmyTasks(data.data);
+                console.log("myTasks",myTasks)
+            }
+        } catch (error) {
+            console.log("error:",error);
+        }
+    }
+     fetchtasks();  
+    },[])
+
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!title.trim() || !description.trim() || !dueDate) {
@@ -28,23 +49,34 @@ export default function TodoList() {
       return;
     }
 
-    const newTodo = {
-      id: Date.now(),
-      title,
-      description,
-      dueDate,
-      completed: false,
-      createdAt: new Date().toISOString()
-    };
-
     if (editingId) {
       setTodos(todos.map(todo => 
         todo.id === editingId ? { ...todo, title, description, dueDate } : todo
       ));
       toast.success('Todo updated successfully!');
     } else {
-      setTodos([newTodo, ...todos]);
-      toast.success('Todo added successfully!');
+        try {
+            var mail = localStorage.getItem("mail");
+            axios.post("http://localhost:5001/todolist",{
+             mail ,
+             title , 
+             description , 
+             dueDate
+            })
+            .then(result =>{
+                if(result.status == 200){
+                console.log("message:",result);
+                toast.success(result.data.message);
+                }
+            })
+            .catch(error =>{
+                toast.warning(error);
+                console.log("error",error);
+            })
+        } catch (error) {
+            toast.warning(error);
+            console.log("error",error);
+        }
     }
 
     setTitle('');
@@ -54,28 +86,34 @@ export default function TodoList() {
   };
 
   const handleEdit = (todo) => {
-    setTitle(todo.title);
-    setDescription(todo.description);
-    setDueDate(todo.dueDate);
-    setEditingId(todo.id);
+    // setTitle(todo.title);
+    // setDescription(todo.description);
+    // setDueDate(todo.dueDate);
+    // setEditingId(todo.id);
   };
 
   const handleDelete = (id) => {
-    setTodos(todos.filter(todo => todo.id !== id));
-    toast.success('Todo deleted successfully!');
+    // setTodos(todos.filter(todo => todo.id !== id));
+    // toast.success('Todo deleted successfully!');
   };
 
   const toggleComplete = (id) => {
-    setTodos(todos.map(todo =>
-      todo.id === id ? { ...todo, completed: !todo.completed } : todo
-    ));
-    toast.info('Todo status updated!');
+    // setTodos(todos.map(todo =>
+    //   todo.id === id ? { ...todo, completed: !todo.completed } : todo
+    // ));
+    // toast.info('Todo status updated!');
   };
 
   const handleSignOut = () => {
     navigate('/login', {replace:true});
     localStorage.removeItem("authToken");
+    localStorage.removeItem("mail");
     toast.info('Signed out successfully!');
+  };
+
+  const convertToIST = (isoDate) => {
+    const date = new Date(isoDate); 
+    return date.toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' });
   };
 
   return (
@@ -129,14 +167,14 @@ export default function TodoList() {
       </form>
 
       <div className="todos-container">
-        {todos.length === 0 ? (
+        {myTasks.length === 0 ? (
           <div className="no-todos">
             <h2>No tasks yet! Add your first task above. 🚀</h2>
           </div>
         ) : (
-          todos.map(todo => (
+            myTasks.map(todo => (
             <div 
-              key={todo.id} 
+              key={todo.todo_id} 
               className={`todo-item ${todo.completed ? 'completed' : ''}`}
             >
               <div className="todo-content">
@@ -144,10 +182,10 @@ export default function TodoList() {
                 <p>{todo.description}</p>
                 <div className="todo-meta">
                   <span className="due-date">
-                    {/* Due: {format(new Date(todo.dueDate), 'MMM dd, yyyy')} */}
+                    <p>{convertToIST(todo.dueDate)}</p>
                   </span>
                   <span className="created-at">
-                    {/* Created: {format(new Date(todo.createdAt), 'MMM dd, yyyy')} */}
+                    <p>{convertToIST(todo.currentTime)}</p>
                   </span>
                 </div>
               </div>

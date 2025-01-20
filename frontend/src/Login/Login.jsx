@@ -18,6 +18,7 @@ export default function Login() {
     if(result.data.token){
         console.log((result.data.token))
         localStorage.setItem("authToken", result.data.token);
+        localStorage.setItem("mail",mail);
         toast.success("successfully logged in")
         navigate('/todo',{replace:true});
     }

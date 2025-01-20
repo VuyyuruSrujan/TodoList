@@ -127,16 +127,49 @@ app.get('/api/current-time', (req, res) => {
     res.json({ currentTime });
 });
 
+var todo_id = 0;
+
 app.post("/todolist", (req,res)=>{
-    const {mail ,todo_id ,todo_title,todo_description,todo_created_at,todo_due_date} = req.body;
-    ToDoModel.create({mail ,todo_id ,todo_title,todo_description,todo_created_at,todo_due_date})
+    const currentTime = new Date();
+    const {mail,title,description,dueDate} = req.body;
+    ToDoModel.create({mail ,todo_id ,title,description,currentTime,dueDate})
     .then(result =>{
-        console.log("created successfully",result)
-        res.json({message:"successfully created"},result);
+        console.log("created successfully",result);
+        todo_id+=1;
+        res.status(200).json({
+            message: "Created successfully",
+            data: result,
+          });
     })
     .catch(error =>{
-        res.json("error",error);
+        res.status(400).json({
+            message: "Invalid input",
+          });
         console.log("error",error);
+    })
+})
+
+
+app.get('/my_tasks/:mail',(req , res)=>{
+    const {mail} = req.params;
+    ToDoModel.find({mail})
+    .then((tasks) => {
+        if(tasks.length > 0){
+            res.status(200).json({
+                message:"Tasks retrieved successfully",
+                data:tasks,
+            })
+        } else{
+            res.status(404).json({
+                message: "No tasks found for the provided mail",
+            })
+        }
+    })
+    .catch((error) =>{
+        console.error("Error fetching tasks:", error);
+        res.status(500).json({
+          message: "An error occurred while fetching tasks",
+        });
     })
 })
 
