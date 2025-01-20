@@ -14,18 +14,23 @@ export default function Login() {
   console.log("mail",mail);
   console.log("password",password);
   axios.post("http://localhost:5001/login" , {mail , password})
-  .then(result =>{
-    console.log("result:",result);
-    if(result.data.message){
-    toast.success(result.data.message);
-    // navigate('/todos')
-    }else{
-        toast.warning(result.data);
+  .then(result => {
+    if(result.data.token){
+        console.log((result.data.token))
+        localStorage.setItem("authToken", result.data.token);
+        toast.success("successfully logged in")
+        navigate('/todo',{replace:true});
     }
-  })
-  .catch(error =>{
-    console.log("error",error);
-  })
+})
+.catch(error => {
+    if (error.response) {
+        toast.warning(error.response.data.message || "An error occurred");
+    } else if (error.request) {
+      toast.warning("No response received from server");
+    } else {
+      toast.warning("Error: " + error.message);
+    }
+});
  }
 
   return (

@@ -50,7 +50,7 @@ function ForgotPassword() {
             navigate('/ResetPassword',{replace:true})
         }
     }else{
-        toast.warning("enter otp")
+        toast.warning("enter otp");
     }
   };
 

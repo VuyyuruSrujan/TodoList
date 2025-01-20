@@ -4,10 +4,11 @@ const cors = require("cors")
 const app = express()
 app.use(express.json())
 app.use(cors())
+const jwt = require('jsonwebtoken');
 const nodemailer = require('nodemailer');
 
 const RegisterModel = require('./models/Register');
-
+const ToDoModel = require('./models/Todo');
 
 mongoose.connect("mongodb://127.0.0.1:27017/srujan");
 
@@ -35,20 +36,24 @@ app.post('/register',(req , res)=>{
     }
 });
 
-app.post('/login' , (req, res)=>{
-    const {mail , password} = req.body;
-    RegisterModel.findOne({mail})
-    .then(result =>{
-        if(result){
-            if(result.password == password){
-                res.json({message:"logged in succeffully"});
-            }else{
-                res.json("incorrect password");
+app.post('/Login', (req, res) => {
+    const { email, password } = req.body;
+    RegisterModel.findOne({ email: email })
+        .then(user => {
+            if (user) {
+                if (user.password === password) {
+                    const token = jwt.sign({ email: user.email }, SECRET_KEY, { expiresIn: "1h" });
+                    res.json({ token });
+                } else {
+                    res.status(401).json({ message: "Password is incorrect" });
+                }
+            } else {
+                res.status(402).json({ message: "You are not registered" });
             }
-        }else{
-            res.json("you are not registered");
-        };
-    })
+        })
+        .catch(err => {
+            res.status(500).json({ message: "Internal Server Error", err });
+        });
 });
 
 app.post('/check_mail',(req , res) =>{
@@ -116,6 +121,24 @@ app.post('/reset_register',(req , res)=>{
     })
     .catch(err=> res.json(err));
 });
+
+app.get('/api/current-time', (req, res) => {
+    const currentTime = new Date();
+    res.json({ currentTime });
+});
+
+app.post("/todolist", (req,res)=>{
+    const {mail ,todo_id ,todo_title,todo_description,todo_created_at,todo_due_date} = req.body;
+    ToDoModel.create({mail ,todo_id ,todo_title,todo_description,todo_created_at,todo_due_date})
+    .then(result =>{
+        console.log("created successfully",result)
+        res.json({message:"successfully created"},result);
+    })
+    .catch(error =>{
+        res.json("error",error);
+        console.log("error",error);
+    })
+})
 
 app.listen(5001, () => {
     console.log("Server is running on port 5001");

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState ,useEffect} from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { FaUser, FaLock, FaEnvelope } from 'react-icons/fa';
@@ -11,6 +11,15 @@ export default function Register() {
   const [mail , setmail] = useState("");
   const [password , setpassowrd] = useState("");
   const [confirm_pass , set_confirm_pass] = useState("");
+
+  useEffect(()=>{
+    var session = localStorage.getItem("authToken");
+    if(session){
+      navigate('/todo');
+    }else{
+      navigate('/');
+    }
+  });
 
   function Register_user(){
     event.preventDefault();

@@ -11,8 +11,12 @@ export default function ResetPassword() {
 
     useEffect(() =>{
         var mail = localStorage.getItem("lmail");
-        setmail(mail);
-        console.log("mail",mail);
+        if(mail){
+          setmail(mail);
+          console.log("mail",mail);
+        }else{
+          navigate('/login');
+        };
     })
     function handleSubmit(){
         event.preventDefault();
@@ -24,7 +28,7 @@ export default function ResetPassword() {
                 if(result.data.message){
                     toast.success("pasword reset successful");
                     localStorage.removeItem("lmail")
-                    navigate('/login');
+                    navigate('/login', {replace:true});
                 }else{
                     toast.warning("user not found");
                 }

@@ -5,6 +5,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import Login from './Login/Login';
 import ForgotPassword from './ForgotPassword/ForgotPassword';
 import ResetPassword from './ResetPassword/ResetPassword';
+import Todo from './TODO/Todo';
 
 function App() {
 
@@ -17,6 +18,7 @@ function App() {
           <Route path='/login' element={<Login />} />
           <Route path='/forgot' element={<ForgotPassword />} />
           <Route path='/ResetPassword' element={<ResetPassword />} />
+          <Route path='/todo' element={<Todo />} />
         </Routes>
       </Router>
     </>
