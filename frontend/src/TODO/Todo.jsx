@@ -24,7 +24,10 @@ export default function TodoList() {
 //   });
 
     useEffect(() =>{
-        async function fetchtasks(){
+     fetchtasks();  
+    },[])
+
+    async function fetchtasks(){
         try {
             var mail = localStorage.getItem("mail");
             var tasks = await fetch(`http://localhost:5001/my_tasks/${mail}`);
@@ -38,12 +41,10 @@ export default function TodoList() {
         } catch (error) {
             console.log("error:",error);
         }
-    }
-     fetchtasks();  
-    },[])
+    };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
+  async function handleSubmit(event) {
+    event.preventDefault();
     if (!title.trim() || !description.trim() || !dueDate) {
       toast.error('Please fill in all fields!');
       return;
@@ -57,22 +58,17 @@ export default function TodoList() {
     } else {
         try {
             var mail = localStorage.getItem("mail");
-            axios.post("http://localhost:5001/todolist",{
+            var result = await axios.post("http://localhost:5001/todolist",{
              mail ,
              title , 
-             description , 
+             description ,
              dueDate
             })
-            .then(result =>{
-                if(result.status == 200){
-                console.log("message:",result);
+            if(result.status == 200){
+                console.log(result.data);
                 toast.success(result.data.message);
-                }
-            })
-            .catch(error =>{
-                toast.warning(error);
-                console.log("error",error);
-            })
+                await fetchtasks();
+            }
         } catch (error) {
             toast.warning(error);
             console.log("error",error);

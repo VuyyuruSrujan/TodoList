@@ -13,30 +13,32 @@ function ForgotPassword() {
 
   function handleSendOTP(){
     event.preventDefault();
-    axios.post('http://localhost:5001/check_mail',{mail})
-    .then(result =>{
-        console.log("result",result);
-        if(result.data.message){
-            axios.post('http://localhost:5001/sendOTP',{mail})
-            .then(result =>{
-                if(result.status == 200){
-                    console.log("sent succesfully",result.data.otp);
-                    localStorage.setItem("local_otp",result.data.otp);
-                    localStorage.setItem("lmail",mail);
-                    toast.success('OTP sent to your email!');
-                    setShowOTP(true);
-                }else{
-                    console.log(result.data.message);
-                }
-            })
-            .catch(error=>{
-                console.log(error);
-            })
-            
-        }else{
-            toast.warning("you are not registered");
+    axios
+    .post('http://localhost:5001/check_mail', { mail })
+    .then((result) => {
+        console.log("result", result);
+        if (result.status === 200) {
+            axios
+                .post('http://localhost:5001/sendOTP', { mail })
+                .then((result) => {
+                    if (result.status === 200) {
+                        console.log("sent successfully", result.data.otp);
+                        localStorage.setItem("local_otp", result.data.otp);
+                        localStorage.setItem("lmail", mail);
+                        toast.success('OTP sent to your email!');
+                        setShowOTP(true);
+                    }
+                })
+                .catch((error) => {
+                    console.error(error);
+                    toast.warning(error.response?.data || "An error occurred");
+                });
         }
     })
+    .catch((error) => {
+        console.error(error);
+        toast.warning(error.response?.data || "An error occurred");
+    });
   };
 
   function handleVerifyOTP(){

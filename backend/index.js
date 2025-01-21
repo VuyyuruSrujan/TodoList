@@ -37,12 +37,12 @@ app.post('/register',(req , res)=>{
 });
 
 app.post('/Login', (req, res) => {
-    const { email, password } = req.body;
-    RegisterModel.findOne({ email: email })
+    const { mail, password } = req.body;
+    RegisterModel.findOne({ mail: mail })
         .then(user => {
             if (user) {
-                if (user.password === password) {
-                    const token = jwt.sign({ email: user.email }, SECRET_KEY, { expiresIn: "1h" });
+                if (user.mail == mail && user.password === password) {
+                    const token = jwt.sign({ mail: user.mail }, SECRET_KEY, { expiresIn: "1h" });
                     res.json({ token });
                 } else {
                     res.status(401).json({ message: "Password is incorrect" });
@@ -57,14 +57,23 @@ app.post('/Login', (req, res) => {
 });
 
 app.post('/check_mail',(req , res) =>{
+    // console.log('Request body:', req.body);
     const {mail} = req.body;
     RegisterModel.findOne({mail})
     .then(result =>{
         if(result){
-            res.json({message:"user exist"});
+            if(result.mail == mail){
+                res.status(200).json({message:"user exist"});
+            }else{
+                res.status(402).json("you are not registered");
+            }
         }else{
-            res.json("you are not registered");
+            res.status(400).json("user doesn't exist");
         }
+    })
+    .catch(error =>{
+        console.log(error);
+        res.status(500).json(error);
     })
 })
 
