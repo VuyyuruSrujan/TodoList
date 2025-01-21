@@ -26,7 +26,7 @@ Make sure you have the following installed on your system:
 ### Clone the Repository
 
 ```bash
-git clone <repository-url>
+git clone https://github.com/VuyyuruSrujan/TodoList
 ```
 
 ### Change Directory
