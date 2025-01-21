@@ -7,6 +7,7 @@ const ToDoScheme = new mongoose.Schema({
     description:String,
     currentTime:Date,
     dueDate:Date,
+    todo_status:Boolean,
 })
 
 const ToDoModel = mongoose.model("todo",ToDoScheme);

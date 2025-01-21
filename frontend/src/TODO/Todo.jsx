@@ -24,7 +24,7 @@ export default function TodoList() {
 //   });
 
     useEffect(() =>{
-     fetchtasks();  
+    fetchtasks();  
     },[])
 
     async function fetchtasks(){
@@ -93,18 +93,18 @@ export default function TodoList() {
     // toast.success('Todo deleted successfully!');
   };
 
-  const toggleComplete = (id) => {
-    // setTodos(todos.map(todo =>
-    //   todo.id === id ? { ...todo, completed: !todo.completed } : todo
-    // ));
-    // toast.info('Todo status updated!');
+  const toggleComplete = (todo_id) => {
+    setmyTasks(myTasks.map(todo =>
+      todo.todo_id === todo_id ? { ...todo, completed: !todo.completed } : todo
+    ));
+    toast.info('Todo status updated!');
   };
 
   const handleSignOut = () => {
     navigate('/login', {replace:true});
     localStorage.removeItem("authToken");
     localStorage.removeItem("mail");
-    toast.info('Signed out successfully!');
+    toast.info('logged out successfully!');
   };
 
   const convertToIST = (isoDate) => {
@@ -187,7 +187,7 @@ export default function TodoList() {
               </div>
               <div className="todo-actions">
                 <button 
-                  onClick={() => toggleComplete(todo.id)}
+                  onClick={() => toggleComplete(todo.todo_id)}
                   className={`status-btn ${todo.completed ? 'uncomplete' : ''}`}
                 >
                   {todo.completed ? <FaTimes /> : <FaCheck />}

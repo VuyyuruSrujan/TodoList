@@ -118,7 +118,7 @@ app.post('/sendOTP', (req, res) => {
 
 app.post('/reset_register',(req , res)=>{
     const {mail , password} = req.body;
-    RegisterModel.updateOne({mail },{$set: {password}})
+    RegisterModel.updateOne({ mail },{$set: {password}})
     .then(result =>{
         if(result.modifiedCount>0){
         console.log("User updated:",result);
@@ -140,8 +140,9 @@ var todo_id = 0;
 
 app.post("/todolist", (req,res)=>{
     const currentTime = new Date();
+    const todo_status = false;
     const {mail,title,description,dueDate} = req.body;
-    ToDoModel.create({mail ,todo_id ,title,description,currentTime,dueDate})
+    ToDoModel.create({mail ,todo_id ,title,description,currentTime,dueDate , todo_status})
     .then(result =>{
         console.log("created successfully",result);
         todo_id+=1;
@@ -180,7 +181,37 @@ app.get('/my_tasks/:mail',(req , res)=>{
           message: "An error occurred while fetching tasks",
         });
     })
-})
+});
+
+app.post('/update_status', (req, res) => {
+    const { todo_id } = req.body;
+    if (!todo_id) {
+        return res.status(400).json({ message: "todo_id is required" });
+    }
+    ToDoModel.findOne({ todo_id })
+        .then((task) => {
+            if (task) {
+                const newStatus = !task.todo_status;
+                ToDoModel.updateOne({ todo_id }, { $set: { todo_status: newStatus } })
+                    .then(() => {
+                        res.status(200).json({
+                            message: "Task status updated successfully",
+                            data: { todo_id, newStatus },
+                        });
+                    })
+                    .catch((error) => {
+                        console.error("Error updating task status:", error);
+                        res.status(500).json({ message: "An error occurred while updating task status" });
+                    });
+            } else {
+                res.status(404).json({ message: "Task not found" });
+            }
+        })
+        .catch((error) => {
+            console.error("Error finding task:", error);
+            res.status(500).json({ message: "An error occurred while finding the task" });
+        });
+});
 
 app.listen(5001, () => {
     console.log("Server is running on port 5001");
