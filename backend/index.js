@@ -240,6 +240,37 @@ app.post('/delete_task', (req, res) => {
 });
 
 
+app.post('/update_todo', (req, res) => {
+    const { todo_id , title , description , dueDate } = req.body;
+    console.log("Received todo_id:", todo_id);
+    if (!todo_id) {
+        return res.status(400).json({ message: "todo_id is required" });
+    }
+    ToDoModel.findOne({ todo_id })
+        .then((task) => {
+            if (task) {
+                ToDoModel.updateOne({ todo_id }, { $set: { title ,description ,dueDate } })
+                    .then(() => {
+                        res.status(200).json({
+                            message: "Task  updated successfully",
+                            data: { todo_id , title ,description ,dueDate },
+                        });
+                    })
+                    .catch((error) => {
+                        console.error("Error updating task:", error);
+                        res.status(500).json({ message: "An error occurred while updating task" });
+                    });
+            } else {
+                res.status(404).json({ message: "Task not found" });
+            }
+        })
+        .catch((error) => {
+            console.error("Error finding task:", error);
+            res.status(500).json({ message: "An error occurred while finding the task" });
+        });
+});
+
+
 app.listen(5001, () => {
     console.log("Server is running on port 5001");
 });

@@ -56,10 +56,24 @@ export default function TodoList() {
     }
 
     if (editingId) {
-      setTodos(todos.map(todo => 
-        todo.id === editingId ? { ...todo, title, description, dueDate } : todo
-      ));
-      toast.success('Todo updated successfully!');
+      try {
+        const result = await axios.post("http://localhost:5001/update_todo", {
+          todo_id: editingId,
+          title,
+          description,
+          dueDate,
+        });
+  
+        if (result.status === 200) {
+          toast.success(result.data.message);
+          await fetchtasks(); // Refresh tasks
+        } else {
+          toast.error("Failed to update the task.");
+        }
+      } catch (error) {
+        console.error("Error updating task:", error);
+        toast.warning(error.response?.data?.message || "An error occurred.");
+      }
     } else {
         try {
             var mail = localStorage.getItem("mail");
@@ -86,11 +100,16 @@ export default function TodoList() {
     setEditingId(null);
   };
 
-  async function handleEdit(todo){
-    // setTitle(todo.title);
-    // setDescription(todo.description);
-    // setDueDate(todo.dueDate);
-    // setEditingId(todo.id);
+  async function handleEdit(todo_id){
+    const taskToEdit = myTasks.find((task) => task.todo_id === todo_id);
+    if (taskToEdit) {
+    setTitle(taskToEdit.title);
+    setDescription(taskToEdit.description);
+    setDueDate(taskToEdit.dueDate);
+    setEditingId(todo_id);
+    } else {
+      toast.warning("Task not found!");
+    }
   };
 
   async function handleDelete(todo_id){
@@ -231,7 +250,7 @@ export default function TodoList() {
                   {todo.todo_status ? "completed" : "not yet completed"}
                 </button>
                 <button 
-                  onClick={() => handleEdit(todo)}
+                  onClick={() => handleEdit((todo.todo_id))}
                   className="edit-btn"
                 >
                   <FaEdit />
