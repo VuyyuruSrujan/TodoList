@@ -174,12 +174,13 @@
   }
   
   .status-btn {
-    background: #48bb78;
+    background: #f56565;
     color: white;
   }
   
-  .status-btn.uncomplete {
-    background: #f56565;
+  .status-btn.true {
+    /* background: #f56565; */
+    background: #48bb78;
   }
   
   .edit-btn {

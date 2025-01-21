@@ -37,11 +37,16 @@ export default function TodoList() {
                 console.log("tasks:",data.data)
                 setmyTasks(data.data);
                 console.log("myTasks",myTasks)
+            }else{
+              console.log(tasks.status);
             }
         } catch (error) {
             console.log("error:",error);
         }
     };
+    useEffect(() => {
+      console.log("Updated myTasks:", myTasks);
+  }, [myTasks]);
 
   async function handleSubmit(event) {
     event.preventDefault();
@@ -81,23 +86,55 @@ export default function TodoList() {
     setEditingId(null);
   };
 
-  const handleEdit = (todo) => {
+  async function handleEdit(todo){
     // setTitle(todo.title);
     // setDescription(todo.description);
     // setDueDate(todo.dueDate);
     // setEditingId(todo.id);
   };
 
-  const handleDelete = (id) => {
-    // setTodos(todos.filter(todo => todo.id !== id));
-    // toast.success('Todo deleted successfully!');
+  async function handleDelete(todo_id){
+    // try {
+      var deleted = await axios.post("http://localhost:5001/delete_task", {todo_id});
+      if(deleted){
+        if(deleted.status == 200){
+          toast.success(deleted.data.message);
+          console.log(deleted.data.message);
+          await fetchtasks();
+        }else if(deleted.status == 400){
+          toast.warning(deleted.data.message);
+          console.log(deleted.data.message);
+        }else if(deleted.status == 500){
+          toast.warning(deleted.data.message);
+          console.log(deleted.data.message);
+        };
+      }
+    // } catch (error) {
+    //   console.log("error:",error);
+    // }
   };
 
-  const toggleComplete = (todo_id) => {
-    setmyTasks(myTasks.map(todo =>
-      todo.todo_id === todo_id ? { ...todo, completed: !todo.completed } : todo
-    ));
-    toast.info('Todo status updated!');
+  async function toggleComplete(todo_id){
+    try {
+      if (!todo_id) {
+        toast.warning('Task ID is missing!',todo_id);
+      }  
+      var task_status =await axios.post('http://localhost:5001/update_status', {todo_id});
+      console.log("status:",task_status);
+      if(task_status){
+        if(task_status.status == 200){
+          console.log( task_status.data.message);
+          toast.success(task_status.data.message);
+          await fetchtasks();
+        }else if(task_status.status == 500){
+          console.log(task_status.data.message);
+          toast.warning(task_status.data.message)
+        }
+      }
+    } catch (error) {
+      console.log("error:",error);
+      toast.warning(error.response?.data.message);
+    }
   };
 
   const handleSignOut = () => {
@@ -187,10 +224,11 @@ export default function TodoList() {
               </div>
               <div className="todo-actions">
                 <button 
-                  onClick={() => toggleComplete(todo.todo_id)}
-                  className={`status-btn ${todo.completed ? 'uncomplete' : ''}`}
+                  onClick={() => toggleComplete((todo.todo_id))}
+                  className={`status-btn ${todo.todo_status ? true : false}`}
                 >
-                  {todo.completed ? <FaTimes /> : <FaCheck />}
+                  {/* {todo.todo_status ? <FaTimes /> : <FaCheck />} */}
+                  {todo.todo_status ? "completed" : "not yet completed"}
                 </button>
                 <button 
                   onClick={() => handleEdit(todo)}
@@ -199,7 +237,7 @@ export default function TodoList() {
                   <FaEdit />
                 </button>
                 <button 
-                  onClick={() => handleDelete(todo.id)}
+                  onClick={() => handleDelete((todo.todo_id))}
                   className="delete-btn"
                 >
                   <FaTrash />

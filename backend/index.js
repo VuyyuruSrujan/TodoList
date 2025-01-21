@@ -136,7 +136,7 @@ app.get('/api/current-time', (req, res) => {
     res.json({ currentTime });
 });
 
-var todo_id = 0;
+var todo_id = 1;
 
 app.post("/todolist", (req,res)=>{
     const currentTime = new Date();
@@ -164,7 +164,7 @@ app.get('/my_tasks/:mail',(req , res)=>{
     const {mail} = req.params;
     ToDoModel.find({mail})
     .then((tasks) => {
-        if(tasks.length > 0){
+        if(tasks.length >= 0){
             res.status(200).json({
                 message:"Tasks retrieved successfully",
                 data:tasks,
@@ -185,6 +185,7 @@ app.get('/my_tasks/:mail',(req , res)=>{
 
 app.post('/update_status', (req, res) => {
     const { todo_id } = req.body;
+    console.log("Received todo_id:", todo_id);
     if (!todo_id) {
         return res.status(400).json({ message: "todo_id is required" });
     }
@@ -212,6 +213,32 @@ app.post('/update_status', (req, res) => {
             res.status(500).json({ message: "An error occurred while finding the task" });
         });
 });
+
+app.post('/delete_task', (req, res) => {
+    const { todo_id } = req.body;
+    console.log("Received todo_id for deletion:", todo_id);
+
+    if (!todo_id) {
+        return res.status(400).json({ message: "todo_id is required" });
+    }
+
+    ToDoModel.deleteOne({ todo_id })
+        .then((result) => {
+            if (result.deletedCount > 0) {
+                res.status(200).json({
+                    message: "Task deleted successfully",
+                    data: { todo_id },
+                });
+            } else {
+                res.status(404).json({ message: "Task not found" });
+            }
+        })
+        .catch((error) => {
+            console.error("Error deleting task:", error);
+            res.status(500).json({ message: "An error occurred while deleting the task" });
+        });
+});
+
 
 app.listen(5001, () => {
     console.log("Server is running on port 5001");
