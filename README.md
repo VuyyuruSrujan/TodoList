@@ -98,7 +98,7 @@ TASK/
 
 ## Additional Notes
 
-- Ensure MongoDB is running locally or provide a connection string in the backend configuration.
+- Ensure MongoDB is running locally.
 ---
 
 Hope you are watching my project now 🙂
