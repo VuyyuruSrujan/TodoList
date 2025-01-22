@@ -1,4 +1,4 @@
-# Todo List Website
+# Todo List
 
 This is a full-stack web application for managing your tasks. It implements all CRUD (Create, Read, Update, Delete) operations and uses the following technologies:
 
