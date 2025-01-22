@@ -25,11 +25,11 @@ export default function ResetPassword() {
             console.log("lmail",mail);
             axios.post('http://localhost:5001/reset_register',{mail , password})
             .then(result =>{
-                if(result.data.message){
+                if(result.status == 200){
                     toast.success("pasword reset successful");
                     localStorage.removeItem("lmail")
                     navigate('/login', {replace:true});
-                }else{
+                }else if(result.status == 400){
                     toast.warning("user not found");
                 }
             })

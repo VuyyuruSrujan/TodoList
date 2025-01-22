@@ -1,0 +1,12 @@
+npm i express
+
+npm i mongoose 
+
+npm i cors
+
+npm i nodemon
+
+npm i require
+
+npm i nodemailer
+

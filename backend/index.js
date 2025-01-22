@@ -19,17 +19,17 @@ app.post('/register',(req , res)=>{
         .then(result=>{
             if(result){
                 if(result.mail == mail){
-                    res.json("user already exists");
+                    res.status(200).json("user already exists");
                 }
             }else{
                 RegisterModel.create({name , mail , password})
                 .then(result =>{
                     console.log("user registered successfully:",result);
-                    res.json("Registered successfully");
+                    res.status(200).json("Registered successfully");
                 })
                 .catch(err =>{
                     console.log("error",err);
-                    res.json(err);
+                    res.status(500).json(err);
                 });
             }
         })
@@ -43,7 +43,7 @@ app.post('/Login', (req, res) => {
             if (user) {
                 if (user.mail == mail && user.password === password) {
                     const token = jwt.sign({ mail: user.mail }, SECRET_KEY, { expiresIn: "1h" });
-                    res.json({ token });
+                    res.status(200).json({ token });
                 } else {
                     res.status(401).json({ message: "Password is incorrect" });
                 }
@@ -122,10 +122,10 @@ app.post('/reset_register',(req , res)=>{
     .then(result =>{
         if(result.modifiedCount>0){
         console.log("User updated:",result);
-        res.json({message:"user details updated successfully"});
+        res.status(200).json({message:"user details updated successfully"});
         }else{
             console.log("No matching user found");
-            res.json({ message: 'User not found' });
+            res.status(400).json({ message: 'User not found' });
         }
     })
     .catch(err=> res.json(err));

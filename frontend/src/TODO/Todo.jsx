@@ -6,7 +6,6 @@ import './TodoList.css';
 import axios from 'axios';
 
 export default function TodoList() {
-  const [todos, setTodos] = useState([]);
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [dueDate, setDueDate] = useState('');
@@ -14,14 +13,14 @@ export default function TodoList() {
   const navigate = useNavigate();
   const [myTasks , setmyTasks] = useState([]);
 
-//   useEffect(() =>{
-//     var check = localStorage.getItem("authToken");
-//     if(!check){
-//         navigate("/login");
-//     }else{
-//         console.log("user exist");
-//     };
-//   });
+  useEffect(() =>{
+    var check = localStorage.getItem("authToken");
+    if(!check){
+        navigate("/login");
+    }else{
+        console.log("user exist");
+    };
+  });
 
     useEffect(() =>{
     fetchtasks();  
@@ -128,9 +127,6 @@ export default function TodoList() {
           console.log(deleted.data.message);
         };
       }
-    // } catch (error) {
-    //   console.log("error:",error);
-    // }
   };
 
   async function toggleComplete(todo_id){

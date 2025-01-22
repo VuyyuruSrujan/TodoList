@@ -16,8 +16,6 @@ export default function Register() {
     var session = localStorage.getItem("authToken");
     if(session){
       navigate('/todo');
-    }else{
-      navigate('/');
     }
   });
 
@@ -33,7 +31,7 @@ export default function Register() {
         axios.post('http://localhost:5001/register',{name , mail , password})
         .then(answer =>{
           console.log("answer",answer);
-          if(answer.data = "Registered successfully"){
+          if(answer.status = 200){
             toast.success(answer.data);
             navigate('/login');
           }

@@ -1,0 +1,10 @@
+npm i react react-dom
+
+npm i axios
+
+npm i react-toastify
+
+npm i react-router-dom
+
+npm i react-icons
+
