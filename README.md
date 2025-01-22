@@ -65,6 +65,7 @@ Start the backend server:
 
 ```bash
 cd backend
+npm i express
 npm start
 ```
 
@@ -74,7 +75,7 @@ Start the frontend development server:
 
 ```bash
 cd frontend
-npm start
+npm run dev
 ```
 
 ### Access the Application
@@ -97,7 +98,7 @@ TASK/
 
 ## Additional Notes
 
-- Ensure MongoDB is running locally or provide a connection string in the backend configuration.
+- Ensure MongoDB is running locally.
 ---
 
 Hope you are watching my project now 🙂
