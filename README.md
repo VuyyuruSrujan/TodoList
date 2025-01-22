@@ -1,89 +1,94 @@
-# Todo List
+Todo List Website
 
 This is a full-stack web application for managing your tasks. It implements all CRUD (Create, Read, Update, Delete) operations and uses the following technologies:
 
-- **Frontend**: React.js
-- **Backend**: Express.js
-- **Database**: MongoDB
+Frontend: React.js
 
-## Features
+Backend: Express.js
 
-1. Add new tasks
-2. View all tasks
-3. Update existing tasks
-4. Delete tasks
+Database: MongoDB
 
-## Prerequisites
+Features
+
+Add new tasks
+
+View all tasks
+
+Update existing tasks
+
+Delete tasks
+
+Prerequisites
 
 Make sure you have the following installed on your system:
 
-- Node.js
-- npm
-- MongoDB
+Node.js
 
-## Getting Started
+npm
 
-### Clone the Repository
+MongoDB
 
-```bash
+Getting Started
+
+Clone the Repository
+
 git clone https://github.com/VuyyuruSrujan/TodoList
-```
 
-### Install Dependencies
+Install Dependencies
 
-To install both frontend and backend dependencies, use the provided PowerShell script:
+To install both frontend and backend dependencies, use the provided PowerShell script (for Windows users):
 
-#### Run the Command in PowerShell
+Run the Command in PowerShell
 
-```powershell
 powershell -ExecutionPolicy Bypass -File .\requirements.ps1
-```
 
-This script will automatically install all the necessary dependencies for the project.
+For users on other operating systems, manually install dependencies using the following commands:
 
-### Start the Application
+Frontend
 
-#### Backend
+cd frontend
+npm install react react-dom axios react-toastify react-router-dom react-icons
+cd ..
+
+Backend
+
+cd backend
+npm install express mongoose cors nodemon require nodemailer
+cd ..
+
+Start the Application
+
+Backend
 
 Start the backend server:
 
-```bash
 cd backend
 npm start
-```
 
-#### Frontend
+Frontend
 
 Start the frontend development server:
 
-```bash
 cd frontend
 npm start
-```
 
-### Access the Application
+Access the Application
 
 Open your browser and navigate to:
 
-```
 http://localhost:3000
-```
 
-## Folder Structure
+Folder Structure
 
-```
 TASK/
 ├── backend/          # Backend code
 ├── frontend/         # Frontend code
 ├── requirements.ps1  # Script to install dependencies
 └── README.md         # Documentation
-```
 
-## Additional Notes
+Additional Notes
 
-- Ensure MongoDB is running locally or provide a connection string in the backend configuration.
+Ensure MongoDB is running locally or provide a connection string in the backend configuration.
 
----
-
-Hope  you are watching my project now 🙂
+Hope you are watching my project now 🙂
 
