@@ -29,14 +29,6 @@ Make sure you have the following installed on your system:
 git clone https://github.com/VuyyuruSrujan/TodoList
 ```
 
-### Change Directory
-
-Navigate to the project directory:
-
-```bash
-cd TASK
-```
-
 ### Install Dependencies
 
 To install both frontend and backend dependencies, use the provided PowerShell script:
