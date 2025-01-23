@@ -10,3 +10,4 @@ npm i require
 
 npm i nodemailer
 
+npm install jsonwebtoken
